@@ -10,18 +10,27 @@ export const getProducts = async (req, res) => {
 		res.status(500).json({ success: false, message: "Server Error" });
 	}
 };
+export const getProductById = async (req, res) => {
+	try {
+	  const { id } = req.params; 
+	  const product = await Product.findById(id);
+
+	  if (!product) {
+		return res.status(404).json({ success: false, message: "Product not found" });
+	  }
+  
+	
+	  res.status(200).json({ success: true, data: product });
+	} catch (error) {
+	  console.log("Error in fetching product by ID:", error.message);
+	  res.status(500).json({ success: false, message: "Server Error" });
+	}
+  };
 export const getProducts2 = async (req, res) => {
 	try {
 	  const { user } = req.params;
-	  // Get the `user` query parameter from the request
-  
-	  // Define a filter object
-	  const filter = user ? { user } : {}; // If `user` is provided, filter by it; otherwise, return all products
-  
-	  // Fetch products based on the filter
+	  const filter = user ? { user } : {}; 
 	  const products = await Product.find(filter);
-  
-	  // Return the filtered products
 	  res.status(200).json({ success: true, data: products });
 	} catch (error) {
 	  console.log("error in fetching products:", error.message);

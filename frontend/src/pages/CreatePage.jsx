@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useProductStore } from "../store/product";
 import { Protect } from '@clerk/clerk-react';
 import { useAuth } from '@clerk/clerk-react'
+import ProtectedRoute from '../components/ProtectedRoute';
 import {
 	ClerkProvider,
 	SignedIn,
@@ -10,7 +11,8 @@ import {
 	RedirectToSignIn,
 	UserButton,
   } from '@clerk/clerk-react'
-  const PUBLISHABLE_KEY ="pk_test_ZGlyZWN0LWhhcmUtNDEuY2xlcmsuYWNjb3VudHMuZGV2JA";
+  const PUBLISHABLE_KEY =import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+console.log(PUBLISHABLE_KEY)
 
   if (!PUBLISHABLE_KEY) {
 	throw new Error('Add your Clerk Publishable Key to the .env file')
@@ -23,7 +25,7 @@ const CreatePage = () => {
 		image: "",
 	});
 	const toast = useToast();
-	const { userId, sessionId, getToken, isLoaded, isSignedIn } = useAuth()
+	const { userId} = useAuth()
 	const { createProduct } = useProductStore();
 
 	const handleAddProduct = async () => {
@@ -48,11 +50,7 @@ const CreatePage = () => {
 	{newProduct.user=userId}
 	return (
 		
-		<Protect
-      role="org:admin"
-      fallback={<p>Only a member of the Billing department can access this content.</p>}
-    >
-		
+		<ProtectedRoute>
 		<Container maxW={"container.sm"}>
 			<VStack spacing={8}>
 				<Heading as={"h1"} size={"2xl"} textAlign={"center"} mb={8}>
@@ -89,7 +87,7 @@ const CreatePage = () => {
 			</VStack>
 		</Container>
 	
-		</Protect>
+		</ProtectedRoute>
 		
 	);
 };

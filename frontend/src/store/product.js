@@ -25,9 +25,17 @@ export const useProductStore = create((set) => ({
     const data = await res.json();
     set({ products: data.data });
   },
-  
+  fetchProducts3: async (pid) => {
+    const res = await fetch(`/api/products/product/${pid}`);
+    const data = await res.json();
+    set({ products: data.data });
+  },
+  resetProducts: () => {
+    // Reset products to an empty array
+    set({ products: [] });
+  },
   fetchProducts2: async (user) => {
-    const response = await fetch(`/api/products/${user}`);
+    const response = await fetch(`/api/products/user/${user}`);
     const data = await response.json();
     set({ products: data.data });
   

@@ -5,8 +5,7 @@ import App from "./App.jsx";
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
 import { ClerkProvider } from '@clerk/clerk-react'
-const PUBLISHABLE_KEY ="";
-
+const PUBLISHABLE_KEY ="pk_test_ZGlyZWN0LWhhcmUtNDEuY2xlcmsuYWNjb3VudHMuZGV2JA";
 if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key")
 }

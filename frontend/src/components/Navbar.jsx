@@ -21,7 +21,7 @@ const Navbar = () => {
         <UserButton />
       </SignedIn>
     </header>
-				<Link className="w-[100%] mx-10" to={"/"}>Product Store 🛒</Link>
+				<Link className="w-[100%] mx-10" to={"/"}>Home 🛒</Link>
 				<Link className="w-[100%] mx-10" to={"/MyProducts"}>My Products🛒</Link>
 				
 					

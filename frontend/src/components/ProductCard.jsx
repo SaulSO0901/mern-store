@@ -20,6 +20,7 @@ import {
 	useToast,
 	VStack,
 } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import { useProductStore } from "../store/product";
 import { useState } from "react";
 
@@ -77,6 +78,7 @@ const ProductCard = ({ product }) => {
 	};
 
 	return (
+			
 		<Box
 			shadow='lg'
 			rounded='lg'
@@ -85,6 +87,9 @@ const ProductCard = ({ product }) => {
 			_hover={{ transform: "translateY(-5px)", shadow: "xl" }}
 			bg={bg}
 		>
+			<Link to={`/:${product._id}`}>
+									
+								
 			<Image src={product.image} alt={product.name} h={48} w='full' objectFit='cover' />
 
 			<Box p={4}>
@@ -105,7 +110,7 @@ const ProductCard = ({ product }) => {
 					/>
 				</HStack>
 			</Box>
-
+			</Link>
 			<Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 
