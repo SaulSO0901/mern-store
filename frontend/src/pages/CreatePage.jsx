@@ -1,22 +1,10 @@
 import { Box, Button, Container, Heading, Input, useColorModeValue, useToast, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { useProductStore } from "../store/product";
-import { Protect } from '@clerk/clerk-react';
+
 import { useAuth } from '@clerk/clerk-react'
 import ProtectedRoute from '../components/ProtectedRoute';
-import {
-	ClerkProvider,
-	SignedIn,
-	SignedOut,
-	RedirectToSignIn,
-	UserButton,
-  } from '@clerk/clerk-react'
-  const PUBLISHABLE_KEY =import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-console.log(PUBLISHABLE_KEY)
 
-  if (!PUBLISHABLE_KEY) {
-	throw new Error('Add your Clerk Publishable Key to the .env file')
-  }
 const CreatePage = () => {
 	const [newProduct, setNewProduct] = useState({
 		name: "",

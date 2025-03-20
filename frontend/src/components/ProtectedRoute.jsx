@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useUser, RedirectToSignIn } from '@clerk/clerk-react';
 
 const ProtectedRoute = ({ children }) => {
