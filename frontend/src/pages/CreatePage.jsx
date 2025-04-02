@@ -11,6 +11,8 @@ const CreatePage = () => {
 		user:"",
 		price: "",
 		image: "",
+		brand:"",
+		feature:{},
 	});
 	const toast = useToast();
 	const { userId} = useAuth()
@@ -33,7 +35,7 @@ const CreatePage = () => {
 				isClosable: true,
 			});
 		}
-		setNewProduct({ name: "",user:"", price: "", image: "" });
+		setNewProduct({ name: "",user:"", price: "", image: "",brand: "",feature:{}, });
 	};
 	{newProduct.user=userId}
 	return (
@@ -65,6 +67,18 @@ const CreatePage = () => {
 							name='image'
 							value={newProduct.image}
 							onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
+						/>
+						<Input
+							placeholder='Brand'
+							name='brand'
+							value={newProduct.brand}
+							onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })}
+						/>
+						<Input
+							placeholder='Feature 1'
+							name='feature'
+							value={newProduct.feature}
+							onChange={(e) => setNewProduct({ ...newProduct, feature: e.target.value })}
 						/>
 
 						<Button colorScheme='blue' onClick={handleAddProduct} w='full'>

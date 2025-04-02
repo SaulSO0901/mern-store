@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import Navbar from "./components/Navbar";
 import { SignIn } from "@clerk/clerk-react";
 import Product from "./pages/Product";
+import Admin from "./pages/Admin";
 
 function App() {
 	return (
@@ -14,8 +15,9 @@ function App() {
 			<Navbar />
 			<Routes>
 				<Route path='/' element={<HomePage/>} />
+				<Route path='/Create/Mern/Admin' element={<Admin/>} />
 				<Route path='/MyProducts' element={<MyProducts/>} />
-				<Route path='/create' element={<CreatePage />} />
+				<Route path='/Create' element={<CreatePage />} />
 				<Route path='/:id' element={<Product/>} />
 			<Route path="/login" element={SignIn}></Route>
 			</Routes>

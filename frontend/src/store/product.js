@@ -31,7 +31,6 @@ export const useProductStore = create((set) => ({
     set({ products: data.data });
   },
   resetProducts: () => {
-    // Reset products to an empty array
     set({ products: [] });
   },
   fetchProducts2: async (user) => {
