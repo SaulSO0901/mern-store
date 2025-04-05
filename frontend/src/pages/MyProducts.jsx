@@ -7,11 +7,11 @@ import { useAuth } from "@clerk/clerk-react";
 
 const MyProducts = () => {
   const { userId } = useAuth();
-  const { products, loading, error, fetchProducts2 } = useProductStore();
+  const { products, loading, error, fetchProductsByUser } = useProductStore();
 
   useEffect(() => {
-    fetchProducts2(userId);
-  }, [fetchProducts2, userId]);
+    fetchProductsByUser(userId);
+  }, [fetchProductsByUser, userId]);
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   console.log(products);

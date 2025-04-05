@@ -1,30 +1,43 @@
 import { useEffect, useState } from "react";
-
 import { useProductStore } from "../store/product";
-import { FaArrowRight } from "react-icons/fa6";
-import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { IoIosStar } from "react-icons/io";
-import { GiGuitarBassHead } from "react-icons/gi";
 import { FaTruck } from "react-icons/fa";
 import { BiSupport } from "react-icons/bi";
 import { GoShieldCheck } from "react-icons/go";
 import { FaHeart } from "react-icons/fa";
+import { PiPackageDuotone } from "react-icons/pi";
+import support from "../assets/support.png";
+import ProductsGallery from "../components/ProductsGallery";
 const Product = () => {
-  const { fetchProducts3, products, resetProducts } = useProductStore(); // Add resetProducts
+  const { fetchProductsById, product, resetProducts } = useProductStore(); 
   const { id } = useParams();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-
-const handleThumbnailClick = (index) => {
-  setSelectedImageIndex(index);
-};
-
-
   const [desc, setDesc] = useState(true);
-
   const [spec, setSpec] = useState(false);
-
   const [rev, setRev] = useState(false);
+  const [br, setBr] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  const imageSrc = product?.image || []; 
+  useEffect(() => {
+    if (!imageSrc) {
+      setBr(true);
+    } else setBr(false);
+  }, [imageSrc]);
+  useEffect(() => {
+    fetchProductsById(id.replace(/:/g, ""));
+
+    return () => {
+      resetProducts();
+    };
+  }, [fetchProductsById, id, resetProducts]);
+
+  const handleThumbnailClick = (index) => {
+    setSelectedImageIndex(index);
+  };
 
   const handleDesc = () => {
     setDesc(true);
@@ -43,30 +56,26 @@ const handleThumbnailClick = (index) => {
     setSpec(false);
     setRev(true);
   };
-  useEffect(() => {
-    fetchProducts3(id.replace(/:/g, ""));
-
-    return () => {
-      resetProducts();
-    };
-  }, [fetchProducts3, id, resetProducts]);
-
-  console.log(id);
-  console.log(products);
-
+  const productName = product?.name || "Loading...";
+  const productPrice = product?.price || "Loading...";
+  const productCategory = product?.category || "Loading...";
+  const productFeature = product?.feature?.[0] || "Default text if missing";
+  const productFeature2 = product?.feature || [];
+  const productBrand = product?.brand || "Loading...";
+  const productImg = product?.image || [];
   return (
     <div>
       <div className="flex-col max-w-[1400px] w-full mx-auto md:px-4 ">
         <div className="flex w-full h-full border-b-[.7px] border-b-C7C5C1 ">
           <div className="flex-col  min-[1px]:hidden md:flex w-full h-full   ">
             <p className="w-full min-[1px]:hidden md:flex text-sm font-extralight text-[#555454]">
-              {`Products/${products.category}`}
+              {`Products/${productCategory}`}
             </p>
             <h2 className="min-[1px]:hidden md:flex  mt-4 py-4 text-4xl font-bold text-[#362D2D]">
-              {products.name}
+              {productName}
             </h2>
             <p className=" min-[1px]:hidden md:flex text-sm font-light text-[#362D2D]">
-              {products?.feature?.[0] || "Default text if missing"}
+              {productFeature}
             </p>
 
             <div className="flex mt-1 items-center">
@@ -82,113 +91,85 @@ const handleThumbnailClick = (index) => {
               >
                 Write your review
               </a>
-              <p className="text-sm font-medium">{products.brand}</p>
+              <p className="text-sm font-medium">{productBrand}</p>
             </div>
           </div>
           <div className="hidden md:flex w-fit justify-end items-center">
             <img
-              src={products?.image?.[0]}
-              className=" w-[137px] h-[61px]  "
+              src={imageSrc || ""}
+              className={
+                br ? "w-[137px] h-[61px] hidden" : "w-[137px] h-[61px]"
+              }
               alt="brand"
             ></img>
           </div>
-          {/*img section*/}
         </div>
+          {/*img section*/}
         <div className="lg:flex  my-4">
           <div className="hidden xl:flex max-w-[60px] w-full   select-none">
             <div className="flex-col">
-            {products.image?.map((imgSrc, index) => (
-      <div
-        key={index}
-        className={
-          selectedImageIndex === index
-            ? "my-2 ring-[#C7C5C1] ring-2 cursor-pointer"
-            : "my-2 cursor-pointer"
-        }
-      >
-        <img
-          onClick={() => handleThumbnailClick(index)}
-          src={imgSrc}
-          className="w-[60px] h-[60px] px-2"
-          alt={`product-${index}`}
-        />
-      </div>
-    ))}
+              {productImg?.map((imgSrc, index) => (
+                <div
+                  key={index}
+                  className={
+                    selectedImageIndex === index
+                      ? "my-2 ring-[#C7C5C1] ring-2 cursor-pointer"
+                      : "my-2 cursor-pointer"
+                  }
+                >
+                  <img
+                    onClick={() => handleThumbnailClick(index)}
+                    src={imgSrc}
+                    className="w-[60px] h-[60px] px-2"
+                    alt={`product-${index}`}
+                  />
+                </div>
+              ))}
             </div>
           </div>
           {/*************************************************************************/}
           <div className="flex-col max-w-[750px] min-w-[300px] w-full mx-auto min-[0px]:max-h-[750px] lg:h-[750px] h-full   ">
-        
-          {products.image && products.image.length > 0 && (
-      <img
-        src={products.image[selectedImageIndex]}
-         className="max-w-[651px] max-h-[750px] w-full h-full xl:px-16 mx-auto"
-        alt="main-product"
-      />
-    )}
+            {productImg && productImg.length > 0 && (
+              <img
+                src={imageSrc[selectedImageIndex]}
+                className="max-w-[651px] max-h-[750px] w-full h-full xl:px-16 mx-auto"
+                alt="main-product"
+              />
+            )}
             {/*************************************************************************/}
-            <div className="hidden md:flex xl:hidden  w-full justify-center items-center   select-none">
-              <div onClick={""} className="mx-3 my-4">
-                <img
-                  src={products.image}
-                  className=" w-[60px] h-[60px] px-2 "
-                  alt="frontz"
-                ></img>
-              </div>
-
-              <div onClick={""} className="mx-3 my-4  ">
-                <img
-                  src={products.image}
-                  className=" w-[60px] h-[60px] px-2 "
-                  alt="frontside"
-                ></img>
-              </div>
-
-              <div onClick={""} className="mx-3 my-4 ">
-                <img
-                  src={products.image}
-                  className=" w-[60px] h-[60px] px-2 "
-                  alt="head"
-                ></img>
-              </div>
-
-              <div onClick={""} className="mx-3 my-4 ">
-                <img
-                  src={products.image}
-                  className=" w-[60px] h-[60px] px-2 "
-                  alt="fret"
-                ></img>
-              </div>
-
-              <div onClick={""} className="mx-3 my-4">
-                <img
-                  src={products.image}
-                  className=" w-[60px] h-[60px] px-2 "
-                  alt="backz"
-                ></img>
-              </div>
-
-              <div onClick={""} className="mx-3 my-4 ">
-                <img
-                  src={products.image}
-                  className=" w-[60px] h-[60px] px-2"
-                  alt="back"
-                ></img>
+            <div className="hidden md:flex xl:hidden w-full justify-center items-center   select-none">
+              <div className="flex ">
+                {productImg?.map((imgSrc, index) => (
+                  <div
+                    key={index}
+                    className={
+                      selectedImageIndex === index
+                        ? "my-2 ring-[#C7C5C1] ring-2 cursor-pointer"
+                        : "my-2 cursor-pointer"
+                    }
+                  >
+                    <img
+                      onClick={() => handleThumbnailClick(index)}
+                      src={imgSrc}
+                      className="w-[60px] h-[60px] px-2"
+                      alt={`product-${index}`}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           </div>
           {/**********************************************************************************************************************************/}
-          <div className="flex-col lg:max-w-[560px] min-w-[292px] xl:w-full  md:w-full  h-full  xl:ml-16 md:mt-[94px] px-4">
+          <div className="flex-col lg:max-w-[560px] min-w-[292px] xl:w-full  md:w-full  h-full  xl:ml-16 md:mt-[194px] px-4">
             <div className="flex-col  min-[1px]:flex md:hidden w-full h-full    ">
               <p className="w-full flex text-sm font-extralight text-[#555454]">
-                Guitars/Electric Guitars/ESP James Hetfield
+                {`Products/${productCategory}`}
               </p>
               <h2 className="flex  mt-4 py-4 text-2xl font-bold text-[#362D2D]">
-                ESP James Hetfield Signature Vulture - Black Satin
+                {productName}
               </h2>
               <p className=" flex text-sm font-light text-[#362D2D]">
-                Solidbody Electric Guitar with Mahogany Body, Mahogany Neck,
-                Ebony Fingerboard, and 2 Active Humbucking Pickups - Black Satin
+                {productFeature}
               </p>
 
               <div className="flex mt-1 items-center">
@@ -205,15 +186,15 @@ const handleThumbnailClick = (index) => {
               </div>
             </div>
 
-            <div className="w-full mt-8  border-b-[.7px] border-b-C7C5C1">
-              <p className=" text-4xl font-bold text-[#ED2C2C]">{`${products.price}$`}</p>
+            <div className="w-full   border-b-[.7px] border-b-C7C5C1">
+              <p className=" text-4xl font-bold text-[#ED2C2C]">{`${productPrice}$`}</p>
             </div>
 
             <div className="w-full mt-4   border-b-[.7px] border-b-C7C5C1 ">
               <p className="text-[#ED2C2C] font-medium">Special Financing.</p>
               <p className="text-[#362D2D] font-medium">
-                As low as ${(products.price / 36).toFixed(2)}/month with 36
-                month financing*
+                As low as ${(productPrice / 36).toFixed(2)}/month with 36 month
+                financing*
               </p>
               <p className="text-[#0072BA] font-medium underline cursor-pointer">
                 See all payment options
@@ -225,7 +206,7 @@ const handleThumbnailClick = (index) => {
                 OR we have a second hand model for just
               </p>
               <p className="mx-1 text-[#ED2C2C]">
-                ${(products.price * 0.9).toFixed(2)}
+                ${(productPrice * 0.9).toFixed(2)}
               </p>
               !
               <p className="lg:hidden xl:flex mx-1 text-[#0072BA] cursor-pointer">
@@ -235,10 +216,10 @@ const handleThumbnailClick = (index) => {
 
             <div className="flex  w-full mt-4 pb-4 border-b-[.7px] border-b-C7C5C">
               <div className="flex-col w-full  justify-center items-center text-center cursor-pointer">
-                <GiGuitarBassHead
+                <PiPackageDuotone
                   className="mx-auto"
                   size={30}
-                ></GiGuitarBassHead>
+                ></PiPackageDuotone>
                 <p className="mx-auto md:text-xs font-medium">
                   37 point
                   <br />
@@ -266,6 +247,17 @@ const handleThumbnailClick = (index) => {
               </div>
             </div>
 
+            <div>
+              <div className="flex border-b-[.7px] border-b-C7C5">
+                <ul>
+                  {productFeature2?.map((item, index) => (
+                    <li className="ml-6 list-disc" key={index}>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
             <div className="flex-col mt-4 border-b-[.7px] border-b-C7C5C select-none">
               <p className="text-[#3A782B]">In Stock!</p>
               <button className="bg-[#428631] mt-4 py-4 px-28 text-white font-medium hover:bg-[#346827]">
@@ -282,7 +274,7 @@ const handleThumbnailClick = (index) => {
             <div className="flex mt-6  border-b-[.7px] border-b-C7C5C select-none">
               <div className="">
                 <img
-                  src={products.image}
+                  src={support}
                   className="w-[80px] h-[80px] rounded-full "
                   alt="support"
                 ></img>
@@ -306,144 +298,18 @@ const handleThumbnailClick = (index) => {
           </div>
         </div>
       </div>
-      {/*************************************************************************/}
-      <div className="flex-col max-w-[1400px] mx-auto mt-5  text-center items-center justify-center ">
-        <h2 className=" text-5xl font-medium w-fit mx-auto">
+      <div className="flex-col max-w-[1400px] mx-auto mt-5 text-center items-center justify-center">
+        <h2 className="text-5xl font-medium w-fit mx-auto">
           Top New Musical Instruments & Gear
         </h2>
-
         <div className="lg:flex  lg:max-w-[1370px] md:max-w-[738px] max-[638px]:max-w-[395px] w-full justify-center mt-4 mx-auto lg:px-4 sm:grid sm:grid-cols-3   md:grid md:grid-cols-3 max-[638px]:grid max-[638px]:grid-cols-2  ">
-          <Link
-            to="/product"
-            className="flex-col max-w-[245px] w-full justify-center items-center"
-          >
-            <div className="  h-7 w-7 md:mx-4 rounded-full bg-blue-900">
-              <p className="p-1 text-white text-xs">1</p>
-            </div>
-            <div className="flex max-w-[195px] md:max-w-[221px]  mx-auto w-full h-[135px]  items-center justify-center">
-              <img src={products.image} className="w-[120px] h-[120px] "></img>
-            </div>
-            <div>
-              <p className="text-xs text-[#362D2D]">
-                Shure SM57 Cardioid Dynamic
-              </p>
-            </div>
-          </Link>
-
-          <Link
-            to="/product"
-            className="flex-col max-w-[245px] w-full justify-center items-center"
-          >
-            <div className=" h-7 w-7  md:mx-4 rounded-full bg-blue-900  ">
-              <p className="p-1 text-white text-xs">2</p>
-            </div>
-            <div className="flex max-w-[195px] md:max-w-[221px]  mx-auto w-full h-[135px]  items-center justify-center">
-              <img src={products.image} className="w-[120px] h-[120px] "></img>
-            </div>
-            <div>
-              <p className="text-xs ">
-                Behringer UB-Xa 16-voice Bi-timbral Polyphonic Analog
-                Synthesizer
-              </p>
-            </div>
-          </Link>
-
-          <Link
-            to="/product"
-            className="flex-col max-w-[245px] w-full justify-center items-center"
-          >
-            <div className=" h-7 w-7  md:mx-4  rounded-full bg-blue-900 ">
-              <p className="p-1 text-white text-xs">3</p>
-            </div>
-            <div className="flex max-w-[195px] md:max-w-[221px]  mx-auto w-full h-[135px]  items-center justify-center">
-              <img src={products.image} className="w-[120px] h-[120px] "></img>
-            </div>
-            <div>
-              <p className="text-xs text-[#362D2D]">
-                Supro 1614RT Amulet 1 x 12-inch 15-watt Tube Combo Amp
-              </p>
-            </div>
-          </Link>
-
-          <Link
-            to="/product"
-            className="flex-col max-w-[195px] md:max-w-[245px] w-full justify-center items-center"
-          >
-            <div className="  h-7 w-7  md:mx-4 rounded-full bg-blue-900 ">
-              <p className="p-1 text-white text-xs">4</p>
-            </div>
-            <div className="flex max-w-[195px] md:max-w-[221px]  mx-auto w-full h-[135px]  items-center justify-center">
-              <img src={products.image} className="w-[120px] h-[120px] "></img>
-            </div>
-            <div>
-              <p className="text-xs text-[#362D2D]">Audio-Technica AT2035</p>
-            </div>
-          </Link>
-
-          <Link
-            to="/product"
-            className="flex-col  max-w-[195px] md:max-w-[245px] w-full justify-center items-center"
-          >
-            <div className=" h-7 w-7  md:mx-4 rounded-full bg-blue-900  ">
-              <p className="p-1 text-white text-xs">5</p>
-            </div>
-            <div className="flex max-w-[195px] md:max-w-[221px]  mx-auto w-full h-[135px]  items-center justify-center">
-              <img src={products.image} className="w-[120px] h-[120px] "></img>
-            </div>
-            <div>
-              <p className="text-xs text-[#362D2D]">Boss Katana head MkII</p>
-            </div>
-          </Link>
-
-          <Link
-            to="/product"
-            className="flex-col  max-w-[195px] md:max-w-[245px] w-full  justify-center items-center"
-          >
-            <div className=" rounded-full bg-blue-900 h-7 w-7  md:mx-4 ">
-              <p className=" p-1 text-white text-xs">6</p>
-            </div>
-            <div className="flex max-w-[195px] md:max-w-[221px]  mx-auto w-full h-[135px]  items-center justify-center">
-              <img src={products.image} className="w-[120px] h-[120px] "></img>
-            </div>
-            <div>
-              <p className="text-xs text-[#362D2D]">
-                Gibson Kirk Hammett {"Greeny"} Les Paul Standard Electric Guitar
-                - Greeny Burst
-              </p>
-            </div>
-          </Link>
-
-          <Link
-            to="/store"
-            className="lg:flex max-w-[245px]  w-full items-center justify-center md:hidden max-[425px]:hidden max-[767px]:hidden "
-          >
-            <div className="flex-col  max-w-[135px] w-full h-[135px] items-center text-center justify-center rounded-full border-[.1px] border-gray-400  hover:ring-4 ring-inset  hover:ring-[#0072BA] ease-in-out duration-200 ">
-              <p className="text-[#0072BA] font-bold mt-10">SEE ALL</p>
-              <div className="flex w-full justify-center">
-                <FaArrowRight
-                  color="C7C5C1"
-                  size={30}
-                  className=""
-                ></FaArrowRight>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            to="/store"
-            className="md:flex-col md:col-start-2 sm:flex-col sm:col-start-2  max-[638px]:col-start-1 max-[638px]:col-end-3   mx-auto w-[160px] lg:hidden "
-          >
-            <p className="text-[#0072BA] font-bold">SEE ALL</p>
-            <div className="flex w-full justify-center">
-              <FaArrowRight
-                color="C7C5C1"
-                size={30}
-                className=""
-              ></FaArrowRight>
-            </div>
-          </Link>
+          <ProductsGallery></ProductsGallery>
         </div>
+        {/*************************************************************************/}
       </div>
+
+
+      
       <div id="desc" className="flex-col w-full mx-auto  mt-5">
         <div className="flex sticky w-full h-10 top-0 mx-1 min-[375px]:mx-0   justify-center items-center bg-white border-[1px] border-C7C5C md:z-10 -z-10">
           <a
@@ -509,7 +375,7 @@ const handleThumbnailClick = (index) => {
             </div>
             <div className=" max-w-[700px] w-full h-full  my-auto">
               <img
-                src={products.image}
+                src={imageSrc}
                 className="max-w-[700px] w-full"
                 alt="laid"
               ></img>
@@ -518,7 +384,7 @@ const handleThumbnailClick = (index) => {
 
           <div className="flex max-h-[650px] h-full mt-14 items-center border-b-[.7px] border-b-C7C5C1">
             <div className="max-w-[650px] max-h-[650px] h-full w-full">
-              <img src={products.image} className="h-[650px]" alt="head"></img>
+              <img src={imageSrc} className="h-[650px]" alt="head"></img>
             </div>
 
             <div className="flex-col max-w-[750px]  w-full  justify-start">
@@ -595,7 +461,7 @@ const handleThumbnailClick = (index) => {
               </p>
             </div>
             <img
-              src={products.image}
+              src={imageSrc}
               className="max-w-[500px] max-h-[700px] w-full  h-full mx-auto"
               alt="front"
             ></img>
@@ -610,7 +476,7 @@ const handleThumbnailClick = (index) => {
             <div className="flex-col">
               <div className=" max-w-[700px] w-full h-full  my-auto">
                 <img
-                  src={products.image}
+                  src={imageSrc}
                   className="max-w-[700px] w-full"
                   alt="laid"
                 ></img>
@@ -634,7 +500,7 @@ const handleThumbnailClick = (index) => {
 
           <div className="flex-col  h-full mt-14 items-center border-b-[.7px] border-b-C7C5C1">
             <div className="max-w-[650px] max-h-[650px] h-full w-full">
-              <img src={products.image} className="h-[650px]" alt="head"></img>
+              <img src={imageSrc} className="h-[650px]" alt="head"></img>
             </div>
 
             <div className="flex-col max-w-[750px] mt-10 mb-4 w-full  justify-start px-2">
@@ -688,7 +554,7 @@ const handleThumbnailClick = (index) => {
           <div className="flex-col p-4 items-center border-b-[.7px] border-b-C7C5C1">
             <div className="max-w-[750px] w-full">
               <img
-                src={products.image}
+                src={imageSrc}
                 className="max-w-[500px] max-h-[700px] w-full  h-full mx-auto text-[#362D2D]"
                 alt="front"
               ></img>

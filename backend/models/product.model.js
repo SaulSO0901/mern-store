@@ -26,6 +26,18 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    brandImg: {
+      type: String,
+      required: false,
+    },
+    quantity:{
+      type: Number,
+      required: true,
+    },
+    color:{
+      type:String,
+      required:true,
+    },
     feature: { type: Array, required: false },
     features1: { type: String, required: false },
     fsImg: { type: String, required: false },

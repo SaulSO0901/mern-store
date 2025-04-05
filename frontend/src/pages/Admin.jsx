@@ -28,6 +28,8 @@ const Admin = () => {
     image: "",
     brand: "",
     category: "",
+    quantity: "",
+    color: "",
     feature: [],
     features1: "",
     fsImg1: "",
@@ -67,6 +69,8 @@ const Admin = () => {
       price: "",
       image: "",
       brand: "",
+      quantity: "",
+      color: "",
       category: "",
       feature: [],
       features1: "",
@@ -88,8 +92,7 @@ const Admin = () => {
   }
   const addImg = () => {
     setImgCount(imgCount + 1);
-    if (imgCount==5)
-      setImgCount(imgCount + 0);
+    if (imgCount == 5) setImgCount(imgCount + 0);
   };
   const removeImg = () => {
     if (imgCount > 0) {
@@ -100,7 +103,6 @@ const Admin = () => {
   };
   const addFeature = () => {
     setFeatureCount(featureCount + 1);
-   
   };
   const removeFeature = () => {
     if (featureCount > 0) {
@@ -175,33 +177,50 @@ const Admin = () => {
                 value={newProduct.price}
                 onChange={(e) =>
                   setNewProduct({ ...newProduct, price: e.target.value })
-                }/>
-                  <div>
+                }
+              />
+              <div>
                 {Array.from({ length: imgCount }).map((_, index) => (
-                <Input
-                  className=" mb-4"
-                  key={index}
-                  placeholder={`Img ${index + 1}URL`}
-                  value={newProduct.image ? newProduct.image[index] : ""}
-                  onChange={(e) => {
-                    const updatedImg = [...(newProduct.image || [])];
-                    updatedImg[index] = e.target.value;
-                    setNewProduct({
-                      ...newProduct,
-                      image: updatedImg,
-                    });
-                  }}
-                />
-              ))}
+                  <Input
+                    className=" mb-4"
+                    key={index}
+                    placeholder={`Img ${index + 1}URL`}
+                    value={newProduct.image ? newProduct.image[index] : ""}
+                    onChange={(e) => {
+                      const updatedImg = [...(newProduct.image || [])];
+                      updatedImg[index] = e.target.value;
+                      setNewProduct({
+                        ...newProduct,
+                        image: updatedImg,
+                      });
+                    }}
+                  />
+                ))}
                 <button onClick={addImg}>Add Feature</button>
                 <button onClick={removeImg}>Remove Feature</button>
-             </div>
+              </div>
               <Input
                 placeholder="Brand"
                 name="brand"
                 value={newProduct.brand}
                 onChange={(e) =>
                   setNewProduct({ ...newProduct, brand: e.target.value })
+                }
+              />
+               <Input
+                placeholder="Quantity"
+                name="quantity"
+                value={newProduct.quantity}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, quantity: e.target.value })
+                }
+              />
+               <Input
+                placeholder="Color"
+                name="color"
+                value={newProduct.color}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, color: e.target.value })
                 }
               />
               <Input

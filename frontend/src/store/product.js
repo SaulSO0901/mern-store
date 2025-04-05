@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 export const useProductStore = create((set) => ({
   products: [],
+  product: null,
   loading: false,
   error: null,
   setProducts: (products) => set({ products }),
@@ -25,15 +26,16 @@ export const useProductStore = create((set) => ({
     const data = await res.json();
     set({ products: data.data });
   },
-  fetchProducts3: async (pid) => {
+ 
+  fetchProductsById: async (pid) => {
     const res = await fetch(`/api/products/product/${pid}`);
     const data = await res.json();
-    set({ products: data.data });
+    set({ product: data.data });
   },
   resetProducts: () => {
-    set({ products: [] });
+    set({ products: [],product:null });
   },
-  fetchProducts2: async (user) => {
+  fetchProductsByUser: async (user) => {
     const response = await fetch(`/api/products/user/${user}`);
     const data = await response.json();
     set({ products: data.data });
@@ -46,7 +48,7 @@ export const useProductStore = create((set) => ({
     const data = await res.json();
     if (!data.success) return { success: false, message: data.message };
 
-    // update the ui immediately, without needing a refresh
+  
     set((state) => ({
       products: state.products.filter((product) => product._id !== pid),
     }));
